@@ -9,6 +9,5 @@ for the client and Node.js + Express + Socket.IO for the server.
 🔗 Room system | Share a 6‑letter code to create or join a whiteboard room.<br>
 🖍️ Live drawing | Strokes broadcast instantly to every participant with color & width preserved.<br>
 🖌️ Color & width picker | Quick palette and slider to personalize your pen.<br>
-👤 Nicknames & cursors | Each user chooses a nickname; remote cursors display the name.<br>
 ♻️ Session memory | Whiteboard state lives on the server so late joiners see the existing drawing.<br>
 ⚡ Stack | React + Tailwind on the front‑end, Express/Socket.IO on the back‑end.<br>
