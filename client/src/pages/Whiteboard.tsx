@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 
 const socket = io("http://localhost:3000");
 
-const colors = ["#000000", "#e63946", "#2a9d8f", "#f4a261", "#264653"];
+const colors = ["#000000", "#e63946", "#2a9d8f", "#f4a261", "#264653"]; // black, red, green, orange, blue
 
 interface Stroke {
     x0: number;
@@ -15,6 +15,13 @@ interface Stroke {
     penWidth: number;
 }
 
+/**
+ * Whiteboard component.
+ *
+ * This component renders a canvas that can be used as a whiteboard. It also
+ * includes a color picker and a pen width selector. The drawing is
+ * synchronized across all users in the same room.
+ */
 const Whiteboard = () => {
     const { roomId } = useParams();
 
@@ -27,6 +34,15 @@ const Whiteboard = () => {
     const nickname = localStorage.getItem("nickname") || "Guest";
     const lastPos = useRef<{ x: number; y: number } | null>(null);
 
+    /**
+     * Draws a line on the canvas.
+     * @param {number} x0 - The x-coordinate of the starting point.
+     * @param {number} y0 - The y-coordinate of the starting point.
+     * @param {number} x1 - The x-coordinate of the ending point.
+     * @param {number} y1 - The y-coordinate of the ending point.
+     * @param {string} color - The color of the line.
+     * @param {number} [width=2] - The width of the line.
+     */
     const drawLine = (
         x0: number,
         y0: number,
@@ -88,6 +104,11 @@ const Whiteboard = () => {
         };
     }, [roomId, nickname]);
 
+    /**
+     * Returns the position of the mouse relative to the canvas element.
+     * @param {React.MouseEvent<HTMLCanvasElement>} e - The mouse event.
+     * @returns {{ x: number; y: number }} - The position of the mouse relative to the canvas element.
+     */
     const getCanvasPos = (e: React.MouseEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current;
         if (!canvas) return { x: 0, y: 0 };
@@ -99,6 +120,10 @@ const Whiteboard = () => {
         };
     };
 
+    /**
+     * Starts drawing on the canvas when the user clicks on it.
+     * @param {React.MouseEvent<HTMLCanvasElement>} e - The mouse event.
+     */
     const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (!ctx) return;
 
@@ -111,6 +136,13 @@ const Whiteboard = () => {
         setIsDrawing(true);
     };
 
+    /**
+     * Draws a line on the canvas from the last recorded position to the new
+     * position of the mouse. Also emits a "drawing" event to the server with
+     * the relevant data, so that the drawing can be synchronized across all
+     * users in the same room.
+     * @param {React.MouseEvent<HTMLCanvasElement>} e - The mouse event.
+     */
     const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (!isDrawing || !ctx || !lastPos.current) return;
 
@@ -130,6 +162,11 @@ const Whiteboard = () => {
         lastPos.current = newPos;
     };
 
+    /**
+     * Stops drawing on the canvas when the user releases the mouse button.
+     * Closes the current path, sets isDrawing to false, and resets the last
+     * recorded position to null.
+     */
     const stopDrawing = () => {
         if (!ctx) return;
 
