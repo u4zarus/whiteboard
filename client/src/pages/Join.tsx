@@ -1,15 +1,35 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Generates a random 5-character uppercase room code.
+ * @returns {string} - The generated room code.
+ */
 const generateRoomCode = () => {
     return Math.random().toString(36).substring(2, 7).toUpperCase();
 };
 
+/**
+ * Join component.
+ *
+ * This component allows a user to join an existing whiteboard room or create a new one.
+ * It includes input fields for the user's nickname and room code. When a user enters
+ * these details, they can join the specified room. The component also provides an
+ * option to generate a new room code if the user wants to create a new room.
+ * The nickname and room code are stored in the local storage and the user is navigated
+ * to the room page upon successful submission.
+ */
 const Join = () => {
     const [nickname, setNickname] = useState("");
     const [roomCode, setRoomCode] = useState("");
     const navigate = useNavigate();
 
+    /**
+     * Handles the form submission for joining a room.
+     * Prevents the default form behavior, checks if both nickname and roomCode are provided,
+     * stores the nickname in local storage, and navigates to the specified room.
+     * @param {React.FormEvent} e - The form event.
+     */
     const handleJoin = (e: React.FormEvent) => {
         e.preventDefault();
         if (nickname && roomCode) {
@@ -18,6 +38,10 @@ const Join = () => {
         }
     };
 
+    /**
+     * Generates a new room code and sets the room code state to the new value.
+     * This is used when a user wants to create a new room.
+     */
     const handleCreateRoom = () => {
         const newRoom = generateRoomCode();
         setRoomCode(newRoom);
