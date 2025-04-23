@@ -14,10 +14,6 @@ const io = new Server(httpServer, {
     },
 });
 
-// app.get("/", (req, res) => {
-//     res.send("running");
-// });
-
 const roomDrawings: Record<string, Array<any>> = {};
 
 io.on("connection", (socket) => {
@@ -28,9 +24,6 @@ io.on("connection", (socket) => {
         socket.data.nickname = nickname;
         socket.data.roomId = roomId;
 
-        // if (roomDrawings[roomId]) {
-        //     roomDrawings[roomId] = [];
-        // }
         socket.emit("init-drawings", roomDrawings[roomId] || []);
 
         console.log(`user ${nickname} joined room ${roomId}`);
